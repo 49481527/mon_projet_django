@@ -1,0 +1,247 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .form-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+    
+    .form-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: none;
+        overflow: hidden;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .form-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        margin: -1.5rem -1.5rem 2rem -1.5rem;
+    }
+    
+    .form-header h2 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 1.8rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .form-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+    }
+    
+    .form-field {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+    
+    .form-field label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.95rem;
+    }
+    
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid #e1e8ed;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+    
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        transform: translateY(-1px);
+    }
+    
+    .form-field input:hover,
+    .form-field select:hover,
+    .form-field textarea:hover {
+        border-color: #bbb;
+        background: white;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .btn-modern {
+        padding: 0.875rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 2px solid;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 120px;
+    }
+    
+    .btn-secondary-modern {
+        background: transparent;
+        color: #6c757d;
+        border-color: #dee2e6;
+    }
+    
+    .btn-secondary-modern:hover {
+        background: #f8f9fa;
+        color: #495057;
+        border-color: #adb5bd;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-primary-modern {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: transparent;
+    }
+    
+    .btn-primary-modern:hover {
+        background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .form-content {
+        padding: 2rem;
+    }
+    
+    .helptext {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+    
+    .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0.5rem 0 0 0;
+    }
+    
+    .errorlist li {
+        color: #dc3545;
+        font-size: 0.85rem;
+        background: #f8d7da;
+        padding: 0.5rem;
+        border-radius: 6px;
+        border-left: 3px solid #dc3545;
+    }
+    
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 1rem;
+        }
+        
+        .form-content {
+            padding: 1.5rem;
+        }
+        
+        .form-header {
+            padding: 1.5rem;
+            margin: -1rem -1rem 1.5rem -1rem;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .btn-modern {
+            width: 100%;
+        }
+    }
+    
+    /* Animation d'entrée */
+    .form-card {
+        animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="form-container">
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>{{ title }}</h2>
+            </div>
+            
+            <div class="form-content">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <div class="form-field">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="helptext">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-actions">
+                        <a href="{% url 'profile' %}" class="btn-modern btn-secondary-modern">
+                            ← Annuler
+                        </a>
+                        <button type="submit" class="btn-modern btn-primary-modern">
+                            ✓ Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

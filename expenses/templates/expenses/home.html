@@ -1,0 +1,158 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpenseTracker - Accueil</title>
+
+    <!-- CSS externe -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- CSS personnalisé (si tu en as) -->
+    <!-- <link rel="stylesheet" href="{% static 'css/style.css' %}"> -->
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            max-width: 450px;
+            width: 100%;
+            margin: 20px;
+        }
+
+        .wallet-icon {
+            color: #667eea;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .welcome-title {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-description {
+            color: #6c757d;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn-custom {
+            border-radius: 15px;
+            padding: 12px 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 8px;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .btn-signup {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-signup:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 576px) {
+            .welcome-card {
+                margin: 10px;
+                border-radius: 20px;
+            }
+
+            .wallet-icon {
+                font-size: 3rem;
+            }
+
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+
+            .welcome-description {
+                font-size: 1rem;
+            }
+
+            .btn-custom {
+                width: 100%;
+                margin: 5px 0;
+                justify-content: center;
+            }
+
+            .button-container {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-12 d-flex justify-content-center">
+                <div class="card welcome-card">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-wallet wallet-icon"></i>
+                        <h1 class="welcome-title">Bienvenue sur ExpenseTracker</h1>
+                        <p class="welcome-description">
+                            Suivez et gérez vos dépenses personnelles facilement et efficacement.
+                        </p>
+                        <div class="button-container">
+                            <a href="{% url 'login' %}" class="btn btn-login btn-custom">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Connexion
+                            </a>
+                            <a href="{% url 'signup' %}" class="btn btn-signup btn-custom">
+                                <i class="fas fa-user-plus"></i>
+                                Créer un compte
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

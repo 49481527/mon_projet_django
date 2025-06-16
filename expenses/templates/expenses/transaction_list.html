@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+
+{% url 'profile' %}
+{% url 'expenses:expense_create' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Historique des transactions</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Montant</th>
+                <th>Catégorie</th>
+                <th>Date</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody><!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique des dépenses - Gestion Dépenses Personnelles</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f5f5f5 100%);
+            min-height: 100vh;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            border-bottom: 1px solid #e9ecef;
+            border-radius: 15px 15px 0 0 !important;
+            background: white;
+        }
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            background-color: #f8f9fa;
+        }
+        .table td {
+            vertical-align: middle;
+        }
+        .btn {
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .badge {
+            font-size: 0.8rem;
+            padding: 0.5em 0.8em;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .text-amount-negative {
+            color: #dc3545 !important;
+            font-weight: 600;
+        }
+        .category-badge {
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .bg-red-light {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        .bg-yellow-light {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        .bg-blue-light {
+            background-color: rgba(13, 202, 240, 0.1);
+            color: #0dcaf0;
+        }
+        .bg-green-light {
+            background-color: rgba(25, 135, 84, 0.1);
+            color: #198754;
+        }
+        .page-title {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+        .no-expenses {
+            color: #6c757d;
+            padding: 3rem 0;
+        }
+        .no-expenses i {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 768px) {
+            .stat-card {
+                margin-bottom: 1rem;
+            }
+            .btn-responsive {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen">
+        <div class="container py-4">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h1 class="page-title mb-2">
+                        <i class="fas fa-history text-primary me-2"></i>
+                        Historique des dépenses
+                    </h1>
+                    <p class="text-muted">Consultez toutes vos dépenses enregistrées</p>
+                </div>
+            </div>
+
+            <!-- Statistiques rapides -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card text-center">
+                        <div class="stat-icon bg-red-light mx-auto mb-3">
+                            <i class="fas fa-minus-circle"></i>
+                        </div>
+                        <h6 class="text-muted mb-1">Total dépenses</h6>
+                        <h4 class="text-danger mb-0">{{ total_expense }} FCFA</h4>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card text-center">
+                        <div class="stat-icon bg-blue-light mx-auto mb-3">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <h6 class="text-muted mb-1">Nombre d'entrées</h6>
+                        <h4 class="text-info mb-0">{{ expenses|length }}</h4>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card text-center">
+                        <div class="stat-icon bg-yellow-light mx-auto mb-3">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h6 class="text-muted mb-1">Dépense moyenne</h6>
+                        <h4 class="text-warning mb-0">{{ average_expense }} FCFA</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liste des dépenses -->
+            <div class="row">
+                <div class="col-12">
+                    {% if expenses %}
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-table text-primary me-2"></i>
+                                Liste des dépenses
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                   <thead>
+                                        <tr>
+                                            <th>Montant</th>
+                                            <th>Catégorie</th>
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+
+                                   <tbody>
+                                        {% for expense in expenses %}
+                                        <tr>
+                                            <td class="text-amount-negative">-{{ expense.amount }} FCFA</td>
+                                            <td>
+                                                <span class="badge category-badge bg-danger-subtle text-danger">
+                                                    <i class="fas fa-tag me-1"></i>{{ expense.category.name }}
+                                                </span>
+                                            </td>
+                                            <td class="text-muted">{{ expense.date|date:"d F Y" }}</td>
+                                            <td>{{ expense.description }}</td>
+                                            <td>
+                                                <a href="{% url 'expenses:expense_update' expense.id %}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-edit"></i> Modifier
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="no-expenses text-center">
+                        <i class="fas fa-receipt"></i>
+                        <h5 class="mt-3">Aucune dépense enregistrée.</h5>
+                        <p class="text-muted">Commencez par ajouter votre première dépense</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between flex-wrap">
+                        <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-responsive">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Retour au profil
+                        </a>
+                        <a href="{% url 'expenses:expense_create' %}" class="btn btn-success btn-responsive">
+                            <i class="fas fa-plus me-2"></i>
+                            Ajouter une dépense
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.amount }}€</td>
+                <td>{{ expense.category.name }}</td>
+                <td>{{ expense.date|date:"d M Y" }}</td>
+                <td>{{ expense.description }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
